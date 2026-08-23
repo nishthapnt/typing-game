@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>((set) => {
     if (userStr) {
       try {
         initialUser = JSON.parse(userStr);
-      } catch (e) {}
+      } catch {}
     }
   }
 

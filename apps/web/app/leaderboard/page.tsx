@@ -15,13 +15,13 @@ const LEADERBOARD_QUERY = gql`
 `;
 
 export default function Leaderboard() {
-  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<{ rank: number, player: string, bestTime: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const data: any = await client.request(LEADERBOARD_QUERY);
+        const data = (await client.request(LEADERBOARD_QUERY)) as { leaderboard: { rank: number, player: string, bestTime: number }[] };
         setLeaderboard(data.leaderboard);
       } catch (e) {
         console.error(e);
