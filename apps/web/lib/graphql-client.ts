@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 import { useAuthStore } from "./store";
 
-const endpoint = "http://localhost:4000/graphql";
+const endpoint = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/graphql";
 
 export const client = new GraphQLClient(endpoint);
 
