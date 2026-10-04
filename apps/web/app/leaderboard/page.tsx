@@ -251,9 +251,6 @@ function LeaderboardRow({
   entry: LeaderboardEntry;
 }) {
   const isFirst = entry.rank === 1;
-  const isSecond = entry.rank === 2;
-  const isThird = entry.rank === 3;
-
   return (
     <tr
       className="
