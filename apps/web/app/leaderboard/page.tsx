@@ -252,7 +252,6 @@ function LeaderboardRow({
 }) {
   const isFirst = entry.rank === 1;
 
-
   return (
     <tr
       className="
