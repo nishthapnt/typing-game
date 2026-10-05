@@ -1,13 +1,10 @@
 import { GraphQLClient } from "graphql-request";
 import { useAuthStore } from "./store";
 
-const endpoint = process.env.NEXT_PUBLIC_API_URL;
-
-console.log("GRAPHQL ENDPOINT:", endpoint);
-
-if (!endpoint) {
-  throw new Error("NEXT_PUBLIC_API_URL is missing");
-}
+// Fallback keeps builds (e.g. Vercel) working when the env var isn't configured.
+const endpoint =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://typing-game-7109.onrender.com/graphql";
 
 export const client = new GraphQLClient(endpoint);
 
