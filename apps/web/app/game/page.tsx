@@ -257,7 +257,7 @@ export default function Game() {
           <section className="w-full">
 
             {/* Stats */}
-            <div className="mb-5 flex flex-wrap items-center justify-center gap-2.5">
+            <div className="mb-3 flex flex-wrap sm:mb-5 items-center justify-center gap-2.5">
               <StatPill
                 label="Time"
                 value={`${displayTime.toFixed(2)}s`}
@@ -292,7 +292,7 @@ export default function Game() {
               <div className="p-4 sm:p-8 lg:p-10">
 
                 {/* Instruction */}
-                <div className="mb-6 text-center">
+                <div className="mb-3 text-center sm:mb-6">
                   <p
                     className="
                       text-xs
@@ -304,33 +304,33 @@ export default function Game() {
                   >
                     Type the character
                   </p>
-                  <p className="mt-1 text-xs text-[var(--text-subtle)] sm:hidden">
+                  <p className="mt-1 text-xs text-[var(--text-subtle)] sm:hidden [@media(max-height:480px)]:hidden">
                     Tap anywhere to open the keyboard
                   </p>
 
                   {/* Character */}
                   <div
                     className="
-                      mt-4
+                      mt-3
                       flex
-                      h-36
+                      h-[clamp(6rem,26dvh,9rem)]
                       items-center
                       justify-center
                       rounded-3xl
                       border border-[var(--border)]
                       bg-[var(--background)]
-                      sm:h-52
+                      sm:h-[clamp(9rem,30dvh,13rem)]
                     "
                   >
                     <span
                       className="
                         font-mono
-                        text-7xl
+                        text-[clamp(3.5rem,16dvh,5rem)]
                         font-bold
                         uppercase
                         leading-none
                         text-[var(--accent)]
-                        sm:text-9xl
+                        sm:text-[clamp(5rem,20dvh,8rem)]
                       "
                     >
                       {chars[currentIndex] || "?"}
@@ -339,7 +339,7 @@ export default function Game() {
                 </div>
 
                 {/* Progress */}
-                <div className="mb-5">
+                <div className="mb-3 sm:mb-5">
                   <div className="mb-2 flex items-center justify-between text-xs">
                     <span className="text-[var(--text-subtle)]">
                       Progress
@@ -376,6 +376,7 @@ export default function Game() {
                 {/* Hint */}
                 <div
                   className="
+                    [@media(max-height:480px)]:hidden
                     flex
                     items-center
                     justify-center
@@ -406,7 +407,7 @@ export default function Game() {
               onClick={initGame}
               className="
                 mx-auto
-                mt-4
+                mt-3
                 flex
                 items-center
                 gap-2

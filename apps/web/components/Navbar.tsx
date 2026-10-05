@@ -33,19 +33,19 @@ export function Navbar() {
     <nav
       className="
         sticky top-0 z-50
-        h-16
+        h-16 pt-[env(safe-area-inset-top)] box-content
         border-b border-[var(--border)]
         bg-[var(--background)]
         
         transition-colors
       "
     >
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-5 sm:px-6">
+      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-3 sm:px-6">
 
         {/* Brand */}
         <Link
           href={mounted && user ? "/game" : "/"}
-          className="group flex items-center gap-3"
+          className="group flex min-w-0 items-center gap-2 sm:gap-3"
         >
           <div
             className="
@@ -73,7 +73,7 @@ export function Navbar() {
         </Link>
 
         {/* Right side */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-0.5 sm:gap-1.5">
 
           {/* Don't render auth-dependent navigation until mounted */}
           {mounted && (
@@ -125,7 +125,7 @@ export function Navbar() {
                       onClick={handleLogout}
                       title="Log out"
                       className="
-                        flex h-9 w-9 items-center justify-center
+                        flex h-10 w-10 items-center justify-center
                         rounded-xl
                         text-[var(--text-muted)]
                         transition-all duration-200
@@ -172,7 +172,7 @@ function NavLink({
       className="
         group flex items-center gap-2
         rounded-xl
-        px-3 py-2
+        px-3 py-2.5
         text-sm font-medium
         text-[var(--text-muted)]
         transition-all duration-200

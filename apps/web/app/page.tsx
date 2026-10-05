@@ -33,6 +33,12 @@ const REGISTER_MUTATION = gql`
   }
 `;
 
+function scrollIntoViewOnFocus(e: React.FocusEvent<HTMLInputElement>) {
+  const el = e.currentTarget;
+  // Wait for the on-screen keyboard to resize the viewport.
+  setTimeout(() => el.scrollIntoView({ block: "center", behavior: "smooth" }), 300);
+}
+
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -116,11 +122,11 @@ export default function Home() {
   if (user) return null;
 
   return (
-    <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-[var(--background)] px-6 py-12 transition-colors">
+    <main className="flex min-h-[calc(100dvh-4rem)] items-start justify-center bg-[var(--background)] px-4 py-6 sm:items-center sm:px-6 sm:py-12 transition-colors">
       <div className="w-full max-w-md">
 
         {/* Brand / intro */}
-        <div className="mb-8 text-center">
+        <div className="mb-5 text-center sm:mb-8">
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-lg shadow-orange-500/20">
             <Zap size={27} fill="currentColor" />
           </div>
@@ -135,10 +141,10 @@ export default function Home() {
         </div>
 
         {/* Auth card */}
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-8 shadow-xl shadow-black/5">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-8 shadow-xl shadow-black/5">
 
           {/* Card heading */}
-          <div className="mb-7">
+          <div className="mb-5 sm:mb-7">
             <h2 className="text-2xl font-bold text-[var(--text)]">
               {isLogin ? "Welcome back" : "Create your account"}
             </h2>
@@ -157,7 +163,7 @@ export default function Home() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
 
             {/* Name */}
             {!isLogin && (
@@ -173,6 +179,7 @@ export default function Home() {
                   />
 
                   <input
+                    onFocus={scrollIntoViewOnFocus}
                     type="text"
                     required
                     value={name}
@@ -209,6 +216,7 @@ export default function Home() {
                 />
 
                 <input
+                    onFocus={scrollIntoViewOnFocus}
                   type="email"
                   required
                   value={email}
@@ -244,6 +252,7 @@ export default function Home() {
                 />
 
                 <input
+                    onFocus={scrollIntoViewOnFocus}
                   type="password"
                   required
                   value={password}
@@ -298,7 +307,7 @@ export default function Home() {
           </form>
 
           {/* Switch auth mode */}
-          <div className="mt-7 border-t border-[var(--border)] pt-6 text-center">
+          <div className="mt-5 border-t border-[var(--border)] pt-6 text-center">
             <span className="text-sm text-[var(--text-muted)]">
               {isLogin
                 ? "Don't have an account?"

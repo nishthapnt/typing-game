@@ -6,13 +6,11 @@ import {
   Clock3,
   AlertCircle,
   Zap,
-  ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { getAuthClient } from "../../lib/graphql-client";
 import { gql } from "graphql-request";
 import { useAuthStore } from "../../lib/store";
-import ThemeToggle from "../../components/ThemeToggle";
 
 const DASHBOARD_QUERY = gql`
   query GetDashboard {
@@ -57,7 +55,7 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[var(--background)] p-8 text-center text-[var(--text)]">
+      <div className="min-h-[calc(100dvh-4rem)] bg-[var(--background)] p-8 text-center text-[var(--text)]">
         Please login.
       </div>
     );
@@ -65,7 +63,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--background)]">
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-[var(--background)]">
         <div className="text-sm text-[var(--text-muted)]">
           Loading your stats...
         </div>
@@ -89,33 +87,17 @@ export default function Dashboard() {
   );
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--text)] transition-colors">
+    <main className="min-h-[calc(100dvh-4rem)] bg-[var(--background)] text-[var(--text)] transition-colors">
 
-      {/* Header */}
-      <header className="border-b border-[var(--border)]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-
-          <Link
-            href="/game"
-            className="flex items-center gap-2 text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--accent)]"
-          >
-            <ArrowLeft size={17} />
-            Back to game
-          </Link>
-
-          <ThemeToggle />
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-6xl px-6 py-12">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
 
         {/* Heading */}
-        <div className="mb-10">
+        <div className="mb-6 sm:mb-10">
           <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
             Performance
           </p>
 
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
             Your dashboard
           </h1>
 
@@ -125,7 +107,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
 
           <StatCard
             icon={<Trophy size={20} />}
@@ -163,9 +145,9 @@ export default function Dashboard() {
         </div>
 
         {/* History */}
-        <section className="mt-10 overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] shadow-xl shadow-black/5">
+        <section className="mt-6 overflow-hidden rounded-3xl sm:mt-10 border border-[var(--border)] bg-[var(--surface)] shadow-xl shadow-black/5">
 
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-4 sm:px-6 sm:py-5">
             <div>
               <h2 className="font-semibold text-lg">
                 Game history
@@ -182,7 +164,7 @@ export default function Dashboard() {
           </div>
 
           {history.length === 0 ? (
-            <div className="p-16 text-center">
+            <div className="p-10 text-center sm:p-16">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--background)]">
                 <Zap size={20} className="text-[var(--accent)]" />
               </div>
@@ -203,7 +185,30 @@ export default function Dashboard() {
               </Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            <ul className="divide-y divide-[var(--border)] sm:hidden">
+              {history.map((game) => (
+                <li key={game.id} className="flex items-center justify-between gap-3 px-4 py-4">
+                  <div className="min-w-0">
+                    <p className="font-mono text-lg font-bold">
+                      {game.completionTime.toFixed(2)}s
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
+                      {new Date(parseInt(game.createdAt)).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+                      {game.wrongAttempts} errors
+                    </span>
+                    <p className="mt-1 font-mono text-xs text-[var(--text-muted)]">
+                      +{game.penaltyTime.toFixed(2)}s
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-left">
                 <thead className="border-b border-[var(--border)] text-xs uppercase tracking-wider text-[var(--text-subtle)]">
                   <tr>
@@ -257,6 +262,7 @@ export default function Dashboard() {
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </section>
 
@@ -277,10 +283,10 @@ function StatCard({
   accent?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+    <div className="min-w-0 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm sm:p-5 transition hover:-translate-y-1 hover:shadow-lg">
 
       <div
-        className={`mb-5 flex h-10 w-10 items-center justify-center rounded-xl ${accent
+        className={`mb-3 flex h-10 w-10 sm:mb-5 items-center justify-center rounded-xl ${accent
             ? "bg-[var(--accent-soft)] text-[var(--accent)]"
             : "bg-[var(--background)] text-[var(--text-muted)]"
           }`}
@@ -293,7 +299,7 @@ function StatCard({
       </p>
 
       <p
-        className={`mt-1 font-mono text-2xl font-bold ${accent ? "text-[var(--accent)]" : ""
+        className={`mt-1 truncate font-mono text-xl font-bold sm:text-2xl ${accent ? "text-[var(--accent)]" : ""
           }`}
       >
         {value}

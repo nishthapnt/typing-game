@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
   interactiveWidget: "resizes-content",
 };
 
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-gray-50 flex flex-col`}>
+      <body className={`${inter.className} min-h-dvh bg-[var(--background)] flex flex-col overflow-x-hidden`}>
         <Navbar />
         <main className="flex-grow">
           {children}

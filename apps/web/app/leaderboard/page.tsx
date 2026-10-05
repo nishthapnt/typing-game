@@ -48,9 +48,9 @@ export default function Leaderboard() {
   return (
     <main
       className="
-        min-h-[calc(100vh-4rem)]
+        min-h-[calc(100dvh-4rem)]
         bg-[var(--background)]
-        px-5 py-10
+        px-3 py-6 sm:py-10
         text-[var(--text)]
         transition-colors duration-300
         sm:px-6
@@ -134,8 +134,8 @@ export default function Leaderboard() {
             className="
               flex items-center justify-between
               border-b border-[var(--border)]
-              px-5 py-5
-              sm:px-7
+              px-4 py-4
+              sm:px-7 sm:py-5
             "
           >
             <div>
@@ -161,7 +161,7 @@ export default function Leaderboard() {
           ) : (
             <div className="overflow-x-auto">
 
-              <table className="w-full min-w-[500px] text-left">
+              <table className="w-full text-left">
 
                 <thead>
                   <tr
@@ -172,8 +172,8 @@ export default function Leaderboard() {
                   >
                     <th
                       className="
-                        w-24
-                        px-5 py-4
+                        w-16 sm:w-24
+                        px-3 py-4 sm:px-5
                         text-center
                         text-xs
                         font-semibold
@@ -188,7 +188,7 @@ export default function Leaderboard() {
 
                     <th
                       className="
-                        px-5 py-4
+                        px-2 py-4 sm:px-5
                         text-xs
                         font-semibold
                         uppercase
@@ -201,7 +201,7 @@ export default function Leaderboard() {
 
                     <th
                       className="
-                        px-5 py-4
+                        px-3 py-4
                         text-right
                         text-xs
                         font-semibold
@@ -262,12 +262,12 @@ function LeaderboardRow({
       "
     >
       {/* Rank */}
-      <td className="px-5 py-4 text-center sm:px-7">
+      <td className="px-3 py-3 text-center sm:px-7 sm:py-4">
         <RankBadge rank={entry.rank} />
       </td>
 
       {/* Player */}
-      <td className="px-5 py-4">
+      <td className="px-2 py-3 sm:px-5 sm:py-4">
         <div className="flex items-center gap-3">
 
           <div
@@ -288,7 +288,7 @@ function LeaderboardRow({
           <div className="min-w-0">
             <div
               className="
-                max-w-[180px]
+                max-w-[34vw] sm:max-w-[240px]
                 truncate
                 font-medium
                 text-[var(--text)]
@@ -316,7 +316,7 @@ function LeaderboardRow({
       </td>
 
       {/* Time */}
-      <td className="px-5 py-4 text-right sm:px-7">
+      <td className="px-3 py-3 text-right sm:px-7 sm:py-4">
         <span
           className={`
             font-mono
