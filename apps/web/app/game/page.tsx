@@ -60,6 +60,9 @@ export default function Game() {
   const [mounted, setMounted] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const focusInput = () => inputRef.current?.focus();
 
   useEffect(() => {
     setMounted(true);
@@ -82,7 +85,7 @@ export default function Game() {
     setIsNewBest(null);
 
     setTimeout(() => {
-      containerRef.current?.focus();
+      inputRef.current?.focus();
     }, 0);
   }, []);
 
@@ -150,20 +153,26 @@ export default function Game() {
     }
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>
-  ) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Mobile keyboards don't emit reliable keydown events, so read the
+    // typed character from the input and clear it each time.
+    const typed = e.target.value.slice(-1);
+    e.target.value = "";
+    processKey(typed);
+  };
+
+  const processKey = (typedKey: string) => {
     if (isFinished || !chars) return;
 
     // Only accept alphabetic characters.
-    if (!/^[a-zA-Z]$/.test(e.key)) return;
+    if (!/^[a-zA-Z]$/.test(typedKey)) return;
 
     // Start timer on first valid key.
     if (!startTime) {
       setStartTime(Date.now());
     }
 
-    const key = e.key.toLowerCase();
+    const key = typedKey.toLowerCase();
     const target = chars[currentIndex].toLowerCase();
 
     if (key === target) {
@@ -205,28 +214,43 @@ export default function Game() {
   return (
     <main
       ref={containerRef}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onBlur={() => {
-        if (startTime && !isFinished) {
-          containerRef.current?.focus();
-        }
-      }}
+      onClick={focusInput}
       className="
         flex
-        h-[calc(100vh-4rem)]
-        items-center
+        min-h-[calc(100dvh-4rem)]
+        items-start
         justify-center
-        overflow-hidden
+        overflow-y-auto
         bg-[var(--background)]
-        px-5
+        px-3
         py-4
+        sm:items-center
+        sm:px-5
         text-[var(--text)]
         outline-none
         transition-colors
         duration-300
       "
     >
+      <input
+        ref={inputRef}
+        type="text"
+        inputMode="text"
+        autoCapitalize="off"
+        autoCorrect="off"
+        autoComplete="off"
+        spellCheck={false}
+        aria-label="Type the character"
+        onChange={handleInput}
+        onBlur={() => {
+          if (startTime && !isFinished) {
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }
+        }}
+        className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
+        style={{ fontSize: 16 }}
+      />
+
       <div className="mx-auto w-full max-w-5xl">
 
         {!isFinished ? (
@@ -265,7 +289,7 @@ export default function Game() {
               {/* Orange accent */}
               <div className="h-1 bg-[var(--accent)]" />
 
-              <div className="p-6 sm:p-8 lg:p-10">
+              <div className="p-4 sm:p-8 lg:p-10">
 
                 {/* Instruction */}
                 <div className="mb-6 text-center">
@@ -280,13 +304,16 @@ export default function Game() {
                   >
                     Type the character
                   </p>
+                  <p className="mt-1 text-xs text-[var(--text-subtle)] sm:hidden">
+                    Tap anywhere to open the keyboard
+                  </p>
 
                   {/* Character */}
                   <div
                     className="
                       mt-4
                       flex
-                      h-48
+                      h-36
                       items-center
                       justify-center
                       rounded-3xl
@@ -298,7 +325,7 @@ export default function Game() {
                     <span
                       className="
                         font-mono
-                        text-8xl
+                        text-7xl
                         font-bold
                         uppercase
                         leading-none
