@@ -251,6 +251,8 @@ function LeaderboardRow({
   entry: LeaderboardEntry;
 }) {
   const isFirst = entry.rank === 1;
+
+
   return (
     <tr
       className="

@@ -11,6 +11,9 @@ const schema = createSchema({
 const yoga = createYoga({
   schema,
   context: createContext,
+  cors: {
+    origin: "*",
+  },
 });
 
 const port = process.env.PORT || 4000;
