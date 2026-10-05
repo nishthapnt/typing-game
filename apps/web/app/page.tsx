@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, User, ArrowRight, Zap } from "lucide-react";
 import { useAuthStore } from "../lib/store";
-import { client } from "../lib/graphql-client";
+import { client, requestWithRetry, wakeServer } from "../lib/graphql-client";
 import { gql } from "graphql-request";
 
 const LOGIN_MUTATION = gql`
@@ -39,9 +39,15 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [waking, setWaking] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { user, setAuth } = useAuthStore();
   const router = useRouter();
+
+  useEffect(() => {
+    wakeServer();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -52,13 +58,14 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       if (isLogin) {
-        const data = (await client.request(LOGIN_MUTATION, {
-          email,
-          password,
-        })) as {
+        const data = (await requestWithRetry(
+          () => client.request(LOGIN_MUTATION, { email, password }),
+          () => setWaking(true)
+        )) as {
           login: {
             token: string;
             user: {
@@ -71,11 +78,10 @@ export default function Home() {
 
         setAuth(data.login.token, data.login.user);
       } else {
-        const data = (await client.request(REGISTER_MUTATION, {
-          name,
-          email,
-          password,
-        })) as {
+        const data = (await requestWithRetry(
+          () => client.request(REGISTER_MUTATION, { name, email, password }),
+          () => setWaking(true)
+        )) as {
           register: {
             token: string;
             user: {
@@ -99,8 +105,11 @@ export default function Home() {
 
       setError(
         error.response?.errors?.[0]?.message ||
-          "Something went wrong. Please try again."
+          "Could not reach the server. Please try again in a moment."
       );
+    } finally {
+      setLoading(false);
+      setWaking(false);
     }
   };
 
@@ -260,7 +269,8 @@ export default function Home() {
             {/* Submit */}
             <button
               type="submit"
-              className="
+              disabled={loading}
+              className="disabled:opacity-70 
                 group flex h-12 w-full items-center justify-center gap-2
                 rounded-xl
                 bg-[var(--accent)]
@@ -272,7 +282,13 @@ export default function Home() {
                 active:translate-y-0
               "
             >
-              {isLogin ? "Sign In" : "Create Account"}
+              {waking
+                ? "Waking up server, please wait…"
+                : loading
+                ? "Please wait…"
+                : isLogin
+                ? "Sign In"
+                : "Create Account"}
 
               <ArrowRight
                 size={18}
