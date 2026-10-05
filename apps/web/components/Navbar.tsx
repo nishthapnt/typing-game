@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuthStore } from "../lib/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Keyboard,
   LogOut,
@@ -49,7 +49,7 @@ export function Navbar() {
         >
           <div
             className="
-              flex h-9 w-9 shrink-0 items-center justify-center
+              flex h-10 w-10 shrink-0 items-center justify-center
               rounded-xl
               bg-[var(--accent)]
               text-white
@@ -61,7 +61,7 @@ export function Navbar() {
             <Keyboard size={19} strokeWidth={2.2} />
           </div>
 
-          <div className="leading-none">
+          <div className="hidden leading-none min-[400px]:block">
             <div className="text-lg font-bold tracking-tight text-[var(--text)]">
               Type<span className="text-[var(--accent)]">Speed</span>
             </div>
@@ -73,7 +73,7 @@ export function Navbar() {
         </Link>
 
         {/* Right side */}
-        <div className="flex items-center gap-0.5 sm:gap-1.5">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
 
           {/* Don't render auth-dependent navigation until mounted */}
           {mounted && (
@@ -98,10 +98,10 @@ export function Navbar() {
                     label="Leaderboard"
                   />
 
-                  <div className="mx-2 hidden h-7 w-px bg-[var(--border)] sm:block" />
+                  <div className="mx-1 h-6 w-px bg-[var(--border)] sm:mx-2 sm:h-7" />
 
                   {/* User */}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1 sm:gap-1.5">
 
                     <div
                       className="
@@ -124,6 +124,7 @@ export function Navbar() {
                       type="button"
                       onClick={handleLogout}
                       title="Log out"
+                      aria-label="Log out"
                       className="
                         flex h-10 w-10 items-center justify-center
                         rounded-xl
@@ -148,7 +149,7 @@ export function Navbar() {
           )}
 
           {/* Theme is always part of the shared navbar */}
-          <div className="ml-1.5 border-l border-[var(--border)] pl-2">
+          <div className="ml-0.5 sm:ml-1.5 sm:border-l sm:border-[var(--border)] sm:pl-2">
             <ThemeToggle />
           </div>
         </div>
@@ -166,19 +167,26 @@ function NavLink({
   icon: React.ReactNode;
   label: string;
 }) {
+  const pathname = usePathname();
+  const active = pathname === href || pathname === `${href}/`;
+
   return (
     <Link
       href={href}
-      className="
-        group flex items-center gap-2
+      aria-label={label}
+      aria-current={active ? "page" : undefined}
+      className={`
+        group flex h-10 min-w-10 items-center justify-center gap-2
         rounded-xl
-        px-3 py-2.5
         text-sm font-medium
-        text-[var(--text-muted)]
         transition-all duration-200
-        hover:bg-[var(--surface)]
-        hover:text-[var(--accent)]
-      "
+        sm:px-3
+        ${
+          active
+            ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+            : "text-[var(--text-muted)] hover:bg-[var(--surface)] hover:text-[var(--accent)]"
+        }
+      `}
     >
       <span className="transition-transform duration-200 group-hover:scale-105">
         {icon}
